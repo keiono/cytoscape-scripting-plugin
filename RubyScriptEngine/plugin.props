@@ -1,0 +1,22 @@
+# -- The following properties are REQUIRED -- #
+
+# The plugin name that will be displayed to users
+pluginName=RubyScriptingEngine
+
+# Description used to give users information about the plugin such as what it does.  
+# Html tags are encouraged for formatting purposes.
+pluginDescription=<p>Script Engine based on JRuby 1.5.1 implementation.  The console is integrated with BioRuby Shell.</p><p><strong>You need to install JRuby 1.5.1 and BioRuby 1.4.0 by yourself.</strong>
+
+# Plugin version number, this must be two numbers separated by a decimlal.  Ex. 0.2, 14.03
+pluginVersion=0.35
+
+# Compatible Cytoscape version
+cytoscapeVersion=2.7, 2.8
+
+# Category, use one of the categories listed on the website or create your own
+pluginCategory=Communication/Scripting
+
+
+# List of authors.  Note each author and institution pair are separated by a : (colon)
+# each additional author institution pair must be separated from other pairs bye a ; (semicolon)
+pluginAuthorsIntsitutions=Keiichiro Ono:UC San Diego Department of Medicine
