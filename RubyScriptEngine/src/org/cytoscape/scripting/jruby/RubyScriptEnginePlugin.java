@@ -142,8 +142,7 @@ public class RubyScriptEnginePlugin extends CytoscapePlugin implements Scripting
 		}
 		
 		System.setProperty("jruby.home", jRubyHome);
-		System.setProperty("org.jruby.embed.class.path", jRubyHome + "/lib/ruby");
-		System.setProperty("org.jruby.embed.class.path", jRubyHome + "/lib/ruby/gems/1.8/gems/bio-1.4.0/lib");
+		System.setProperty("org.jruby.embed.class.path", jRubyHome);
 		logger.info("JRuby Home Dir = " + jRubyHome);
 		
 		final ScriptingContainer container = new ScriptingContainer();

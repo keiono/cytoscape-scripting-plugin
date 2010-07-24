@@ -1,6 +1,6 @@
-#$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/1.8'
-#$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/site_ruby/shared'
-#$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/gems/1.8/gems/bio-1.4.0/lib'
+$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/1.8'
+$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/site_ruby/shared'
+$LOAD_PATH << ENV['JRUBY_HOME'] + '/lib/ruby/gems/1.8/gems/bio-1.4.0/lib'
 
 require 'bio'
 require 'bio/shell'
