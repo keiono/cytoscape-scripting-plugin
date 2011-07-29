@@ -1,11 +1,11 @@
 # -- The following properties are REQUIRED -- #
 
 # The plugin name that will be displayed to users
-pluginName=ScriptEngineManager
+pluginName=JavaScriptEngine
 
 # Description used to give users information about the plugin such as what it does.  
 # Html tags are encouraged for formatting purposes.
-pluginDescription=This plugin manages scripting engines for Cytoscape.  Supports Java Scripting Framework available from Java 6 (JSR-223)
+pluginDescription=<p>Default JavaScript engine in Java SE 6.  You can run JavaScript on Cytoscape.  <strong>To use this plugin, you need to install Java SE 6 AND ScriptEngineManager Plugin 1.0 or later</strong>.</p>
 
 # Plugin version number, this must be two numbers separated by a decimlal.  Ex. 0.2, 14.03
 pluginVersion=1.0
@@ -19,4 +19,4 @@ pluginCategory=Communication/Scripting
 
 # List of authors.  Note each author and institution pair are separated by a : (colon)
 # each additional author institution pair must be separated from other pairs bye a ; (semicolon)
-pluginAuthorsIntsitutions=Keiichiro Ono:UC San Diego Department of Medicine
+pluginAuthorsIntsitutions=Keiichiro Ono:UCSD Department of Medicine

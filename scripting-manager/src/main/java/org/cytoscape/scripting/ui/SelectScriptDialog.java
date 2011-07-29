@@ -41,9 +41,9 @@ import java.util.Map;
 
 import javax.swing.JDialog;
 
-import org.cytoscape.scripting.ScriptEngineManager;
+import org.cytoscape.scripting.CyScriptEngineManager;
 import org.cytoscape.scripting.ScriptEngineManagerPlugin;
-import org.cytoscape.scripting.ScriptingEngine;
+import org.cytoscape.scripting.CyScriptingEngine;
 
 import cytoscape.Cytoscape;
 import cytoscape.task.Task;
@@ -62,10 +62,10 @@ public class SelectScriptDialog extends JDialog {
 	
 	private static SelectScriptDialog dialog = new SelectScriptDialog(null, true);
 	private static String currentEngineID;
+	
 	private String scriptName = null;
 	private Map<String, String> arguments = new HashMap<String, String>();
 
-	// Variables declaration - do not modify
 	private javax.swing.JButton cancelButton;
 	private javax.swing.JButton runButton;
 	private javax.swing.JLabel titleLabel;
@@ -73,12 +73,9 @@ public class SelectScriptDialog extends JDialog {
 	private javax.swing.JPanel filePanel;
 	private javax.swing.JTextField fileTextField;
 
-	// End of variables declaration
-	/**
-	 *  DOCUMENT ME!
-	 */
+	
 	public static void showDialog(String engineID) {
-		final ScriptingEngine engine = ScriptEngineManagerPlugin.getManager().getEngine(engineID);
+		final CyScriptingEngine engine = ScriptEngineManagerPlugin.getManager().getEngine(engineID);
 
 		if (engine == null)
 			return;
@@ -261,9 +258,8 @@ public class SelectScriptDialog extends JDialog {
 
 			if (scriptName != null) {
 				try {
-					ScriptEngineManager.execute(currentEngineID, scriptName, arguments);
+					ScriptEngineManagerPlugin.getManager().execute(currentEngineID, scriptName, arguments);
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 					taskMonitor.setException(e1, "Could not finish script.");
 				}
@@ -274,6 +270,7 @@ public class SelectScriptDialog extends JDialog {
 		}
 
 		public void halt() {
+			// TODO Implement this!!
 		}
 
 		public void setTaskMonitor(TaskMonitor monitor) throws IllegalThreadStateException {

@@ -38,12 +38,12 @@ import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.FileReader;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -55,61 +55,62 @@ import org.cytoscape.scripting.ui.SelectScriptDialog;
 
 import cytoscape.Cytoscape;
 import cytoscape.logger.CyLogger;
+import cytoscape.util.CytoscapeMenuBar;
 
 /**
- * Wrapper class for BSF Scripting Engine Manager
+ * Wrapper class for Java scripting framework.
  * 
  */
-public class ScriptEngineManager implements PropertyChangeListener {
+public final class CyScriptEngineManager implements PropertyChangeListener {
 	
-	private static final javax.script.ScriptEngineManager manager;
+	private static final CyLogger logger = CyLogger.getLogger(CyScriptEngineManager.class);
+	
+	// Manager for JSR-223 Scripting Engines
+	private static final ScriptEngineManager manager = new ScriptEngineManager();
 	
 	private static final Icon SCRIPT_ICON = new ImageIcon(
-			ScriptEngineManager.class.getResource("/images/stock_run-macro.png"));
+			CyScriptEngineManager.class.getResource("/images/stock_run-macro.png"));
 	private static final Icon CONSOLE_ICON = new ImageIcon(
-			ScriptEngineManager.class.getResource("/images/gnome-terminal.png"));
+			CyScriptEngineManager.class.getResource("/images/gnome-terminal.png"));
 	
-	private final Map<String, ScriptingEngine> registeredNames;
+	private static final String PLUGIN_MENU = "Plugins";
+	
+	private final Map<String, CyScriptingEngine> registeredNames;
 	
 	private final JMenu menu;
 	private final JMenu consoleMenu;
 
-	static {
-		manager = new javax.script.ScriptEngineManager();
-	}
 
 	/**
 	 * Creates a new ScriptEngineManager object.
 	 */
-	ScriptEngineManager() {
+	protected CyScriptEngineManager() {
 		
-		registeredNames = new ConcurrentHashMap<String, ScriptingEngine>();
+		registeredNames = new ConcurrentHashMap<String, CyScriptingEngine>();
 		
-		menu = new JMenu("Execute Scripts...");
+		final CytoscapeMenuBar menuBar = Cytoscape.getDesktop().getCyMenus().getMenuBar();
+		
+		menu = new JMenu("Execute Scripts");
 		menu.setIcon(SCRIPT_ICON);
-		Cytoscape.getDesktop().getCyMenus().getMenuBar().getMenu("Plugins")
-				.add(menu);
+		menuBar.getMenu(PLUGIN_MENU).add(menu);
 
 		consoleMenu = new JMenu("Scripting Language Consoles");
 		consoleMenu.setIcon(CONSOLE_ICON);
-		Cytoscape.getDesktop().getCyMenus().getMenuBar().getMenu("Plugins")
-				.add(consoleMenu);
+		menuBar.getMenu(PLUGIN_MENU).add(consoleMenu);
 	}
 
-	
-	javax.script.ScriptEngineManager getManager() {
+
+	protected ScriptEngineManager getManager() {
 		return manager;
 	}
 
+	
 	/**
-	 * DOCUMENT ME!
 	 * 
 	 * @param id
-	 *            DOCUMENT ME!
 	 * @param engine
-	 *            DOCUMENT ME!
 	 */
-	public void registerEngine(final String id, final ScriptingEngine engine) {
+	public void registerEngine(final String id, final CyScriptingEngine engine) {
 		registeredNames.put(id, engine);
 
 		menu.add(new JMenuItem(new AbstractAction(engine.getDisplayName()) {
@@ -120,85 +121,72 @@ public class ScriptEngineManager implements PropertyChangeListener {
 				SelectScriptDialog.showDialog(id);
 			}
 		}));
+		
+		logger.info("Scripting Engine Registered: " + id);
 	}
 
+	
 	/**
-	 * DOCUMENT ME!
+	 * Add console menu item if available.
 	 * 
 	 * @param consoleMenuItem
-	 *            DOCUMENT ME!
 	 */
 	public void addConsoleMenu(final JMenuItem consoleMenuItem) {
 		consoleMenu.add(consoleMenuItem);
 	}
 
+
 	/**
-	 * DOCUMENT ME!
 	 * 
 	 * @param engineID
-	 *            DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
+	 * @return
 	 */
-	public ScriptingEngine getEngine(String engineID) {
+	public CyScriptingEngine getEngine(String engineID) {
 		return registeredNames.get(engineID);
 	}
 
+
 	/**
-	 * DOCUMENT ME!
 	 * 
-	 * @param engineName
-	 *            DOCUMENT ME!
+	 * @param engineID
 	 * @param scriptFileName
-	 *            DOCUMENT ME!
 	 * @param arguments
-	 *            DOCUMENT ME!
-	 * 
-	 * @throws BSFException
-	 *             DOCUMENT ME!
-	 * @throws IOException
-	 *             DOCUMENT ME!
-	 * @throws ScriptException 
+	 * @throws ScriptException
 	 */
-	public static void execute(final String engineName,
-			final String scriptFileName, final Map<String, String> arguments)
+	public Object execute(final String engineID, final String scriptFileName, final Map<String, String> arguments)
 			throws ScriptException {
 		
-		final ScriptEngine engine = manager.getEngineByName(engineName);
+		final ScriptEngine engine = manager.getEngineByName(engineID);
 		
-		if ( engine == null) {
-			// Register Engine
-			CyLogger.getLogger().error("Error: Can't find " + engineName);
-			return;
-		}
-
+		if (engine == null)
+			throw new IllegalArgumentException("Could not find scripting engine runtime: " + engineID);
+		
 		final Object returnVal;
 		
 		try {
 			// This is a hack... I need to decide which version of Scripting
 			// System is appropriate for Cytoscape 3.
-			if (engineName != "jython") {
+			if (engineID != "jython")
 				returnVal = engine.eval(new FileReader(scriptFileName));
-			} else {
+			else {
 				// Jython uses special console to execute script.
 
-				final Class<?> engineClass = Class
-						.forName("edu.ucsd.bioeng.idekerlab.pythonengine.PythonEnginePlugin");
-				Method method = engineClass.getMethod("executePythonScript",
-						new Class[] { String.class });
-				returnVal = method.invoke(null,
-						new Object[] { scriptFileName });
+				final Class<?> engineClass = Class.forName("edu.ucsd.bioeng.idekerlab.pythonengine.PythonEnginePlugin");
+				Method method = engineClass.getMethod("executePythonScript", new Class[] { String.class });
+				returnVal = method.invoke(null, new Object[] { scriptFileName });
 			}
 		} catch (Exception e) {
 			throw new ScriptException(e);
 		}
 		
 		if (returnVal != null)
-			System.out.println("Return Val = [" + returnVal + "]");
+			logger.info("Return Val = [" + returnVal + "]");
+		
+		return returnVal;
 	}
 
 	
-	public void propertyChange(PropertyChangeEvent arg0) {
+	public void propertyChange(PropertyChangeEvent pce) {
 		// TODO Auto-generated method stub
 	}
 }

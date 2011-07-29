@@ -1,91 +1,63 @@
 package org.cytoscape.scripting.javascript;
 
 import java.beans.PropertyChangeEvent;
-import java.lang.reflect.Method;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
+import org.cytoscape.scripting.CyScriptingEngine;
 import org.cytoscape.scripting.ScriptEngineManagerPlugin;
-import org.cytoscape.scripting.ScriptingEngine;
 
 import cytoscape.Cytoscape;
+import cytoscape.logger.CyLogger;
 import cytoscape.plugin.CytoscapePlugin;
 
-public class JavaScriptEnginePlugin extends CytoscapePlugin implements ScriptingEngine {
+public class JavaScriptEnginePlugin extends CytoscapePlugin implements CyScriptingEngine {
+	
+	private static final CyLogger logger = CyLogger.getLogger(JavaScriptEnginePlugin.class);
 
-	private static final String ENGINE_NAME = "javascript";
-	private static final String ENGINE_DISPLAY_NAME = "JavaScript Engine (based on Rhino 1.7.2)";
+	private static final String ENGINE_NAME = "js";
+	private static final String ENGINE_DISPLAY_NAME = "JavaScript Engine (Standard in Java 6 and later)";
 	private static final Icon ICON = new ImageIcon(JavaScriptEnginePlugin.class.getResource("/images/rhino32.png"));
 
 	private static final JavaScriptEnginePlugin engine = new JavaScriptEnginePlugin();
 
-	/**
-	 * Creates a new RubyEnginePlugin object.
-	 */
+	
 	public JavaScriptEnginePlugin() {
 		Cytoscape.getPropertyChangeSupport().addPropertyChangeListener(this);
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
-	 */
+	@Override
 	public String getDisplayName() {
-		// TODO Auto-generated method stub
 		return ENGINE_DISPLAY_NAME;
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
-	 */
+	
+	@Override
 	public Icon getIcon() {
-		// TODO Auto-generated method stub
 		return ICON;
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 * 
-	 * @return DOCUMENT ME!
-	 */
+
+	@Override
 	public String getIdentifier() {
-		// TODO Auto-generated method stub
 		return ENGINE_NAME;
 	}
 
-	/**
-	 * DOCUMENT ME!
-	 */
-	public static void register() {
-//		BSFManager.registerScriptingEngine(ENGINE_NAME, "org.apache.bsf.engines.javascript.JavaScriptEngine",
-//				new String[] { ENGINE_NAME });
+
+	private void register() {
+		// JavaScript is standard in Java SE 6 and later.  So we do not have to register actual engine.
 		ScriptEngineManagerPlugin.getManager().registerEngine(ENGINE_NAME, engine);
-
-		System.out.println("*Rhino JavaScript engine loaded!");
-
-		try {
-			final Class engineClass = Class
-					.forName("edu.ucsd.bioeng.idekerlab.scriptenginemanager.ScriptEngineManager");
-			Method method = engineClass
-					.getMethod("registerEngine", new Class[] { String.class, ScriptingEngine.class });
-			Object ret = method.invoke(null, new Object[] { ENGINE_NAME, engine });
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		logger.info("JavaScript engine registered to Script Engine Manager.");
 	}
 
 
+	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		if (ScriptEngineManagerPlugin.getManager().getEngine(ENGINE_NAME) != null)
 			return;
 
-		if (e.getPropertyName().equals(Cytoscape.CYTOSCAPE_INITIALIZED)) {
-			// Register this to ScriptEngineManager.
+		if (e.getPropertyName().equals(Cytoscape.CYTOSCAPE_INITIALIZED))
 			register();
-		}
 	}
 }

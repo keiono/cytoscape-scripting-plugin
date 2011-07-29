@@ -44,7 +44,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 
 import org.cytoscape.scripting.ScriptEngineManagerPlugin;
-import org.cytoscape.scripting.ScriptingEngine;
+import org.cytoscape.scripting.CyScriptingEngine;
 import org.cytoscape.scripting.jruby.console.CyIRBConsole;
 import org.jruby.embed.ScriptingContainer;
 
@@ -56,7 +56,7 @@ import cytoscape.plugin.CytoscapePlugin;
 /**
  *
  */
-public class RubyScriptEnginePlugin extends CytoscapePlugin implements ScriptingEngine {
+public class RubyScriptEnginePlugin extends CytoscapePlugin implements CyScriptingEngine {
 	private static final String ENGINE_NAME = "jruby";
 	
 	private static final String ENGINE_VERSION = "1.5.1";

@@ -41,22 +41,15 @@ import cytoscape.plugin.CytoscapePlugin;
  */
 public class ScriptEngineManagerPlugin extends CytoscapePlugin {
 
-	private static final ScriptEngineManager manager = new ScriptEngineManager();
-
-	/**
-	 * Creates a new ScriptEngineManagerPlugin object.
-	 * 
-	 * This is private because this object is a singleton.
-	 * 
-	 */
-	public ScriptEngineManagerPlugin() {}
+	// Singleton
+	private static final CyScriptEngineManager manager = new CyScriptEngineManager();
 
 	/**
 	 * Get scripting engine manager object.
 	 * 
 	 * @return Scripting engine manager (singleton).
 	 */
-	public static ScriptEngineManager getManager() {
+	public static CyScriptEngineManager getManager() {
 		return manager;
 	}
 }
