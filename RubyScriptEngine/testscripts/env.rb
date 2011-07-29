@@ -1,3 +1,0 @@
-p ENV
-
-puts 'Done!'
