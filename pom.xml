@@ -9,7 +9,7 @@
 	<url>http://www.cytoscape.org/</url>
 	<name>Cytoscape Scripting Plugins</name>
 	<description>
-		Scripting Plugins for Cytoscape 2.x series
+		Scripting Plugins for Cytoscape 2.8 and later
 	</description>
 
 	<contributors>
@@ -24,6 +24,8 @@
 		<module>scripting-manager</module>
 		<module>scripting-rhino</module>
 		<module>scripting-jruby</module>
+		<module>scripting-jython</module>
+		<module>scripting-groovy</module>
 	</modules>
 
 	<build>
@@ -98,7 +100,7 @@
 			<version>2.8.1</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
