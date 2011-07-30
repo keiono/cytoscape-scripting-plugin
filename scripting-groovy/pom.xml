@@ -30,6 +30,11 @@
 					<descriptors>
 						<descriptor>assembly.xml</descriptor>
 					</descriptors>
+					<archive>
+						<manifestEntries>
+							<Cytoscape-Plugin>org.cytoscape.scripting.groovy.GroovyEnginePlugin</Cytoscape-Plugin>
+						</manifestEntries>
+					</archive>
 				</configuration>
 				<executions>
 					<execution>
