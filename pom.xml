@@ -26,6 +26,7 @@
 		<module>scripting-jruby</module>
 		<module>scripting-jython</module>
 		<module>scripting-groovy</module>
+		<module>scripting-clojure</module>
 	</modules>
 
 	<build>
