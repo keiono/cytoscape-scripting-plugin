@@ -31,7 +31,7 @@
  You should have received a copy of the GNU Lesser General Public License
  along with this library; if not, write to the Free Software Foundation,
  Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA.
-*/
+ */
 package org.cytoscape.scripting.ui;
 
 import java.awt.Color;
@@ -41,28 +41,29 @@ import java.util.Map;
 
 import javax.swing.JDialog;
 
-import org.cytoscape.scripting.CyScriptEngineManager;
-import org.cytoscape.scripting.ScriptEngineManagerPlugin;
 import org.cytoscape.scripting.CyScriptingEngine;
+import org.cytoscape.scripting.ScriptEngineManagerPlugin;
 
 import cytoscape.Cytoscape;
+import cytoscape.logger.CyLogger;
 import cytoscape.task.Task;
 import cytoscape.task.TaskMonitor;
 import cytoscape.task.ui.JTaskConfig;
 import cytoscape.task.util.TaskManager;
 import cytoscape.util.FileUtil;
 
-
 /**
+ * Simple load dialog for scripts.
  *
  */
 public class SelectScriptDialog extends JDialog {
-	
+
 	private static final long serialVersionUID = 8588359223553568782L;
-	
+
 	private static SelectScriptDialog dialog = new SelectScriptDialog(null, true);
-	private static String currentEngineID;
 	
+	private static String currentEngineID;
+
 	private String scriptName = null;
 	private Map<String, String> arguments = new HashMap<String, String>();
 
@@ -73,25 +74,27 @@ public class SelectScriptDialog extends JDialog {
 	private javax.swing.JPanel filePanel;
 	private javax.swing.JTextField fileTextField;
 
-	
-	public static void showDialog(String engineID) {
+	public static void showDialog(final String engineID) {
 		final CyScriptingEngine engine = ScriptEngineManagerPlugin.getManager().getEngine(engineID);
 
 		if (engine == null)
-			return;
+			CyLogger.getLogger().error("Could not find the scripting engine: " + engineID);
 
 		currentEngineID = engineID;
 		dialog.titleLabel.setIcon(engine.getIcon());
 		dialog.setLocationRelativeTo(Cytoscape.getDesktop());
 		dialog.pack();
+		dialog.setModalityType(ModalityType.DOCUMENT_MODAL);
 		dialog.setVisible(true);
 	}
 
 	/**
 	 * Creates a new SelectScriptDialog object.
-	 *
-	 * @param parent  DOCUMENT ME!
-	 * @param modal  DOCUMENT ME!
+	 * 
+	 * @param parent
+	 *            DOCUMENT ME!
+	 * @param modal
+	 *            DOCUMENT ME!
 	 */
 	public SelectScriptDialog(java.awt.Frame parent, boolean modal) {
 		super(parent, modal);
@@ -124,85 +127,75 @@ public class SelectScriptDialog extends JDialog {
 		titleLabel.setText("Run Script from File");
 
 		filePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Script File",
-		                                                                 javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
-		                                                                 javax.swing.border.TitledBorder.DEFAULT_POSITION,
-		                                                                 new java.awt.Font("SansSerif",
-		                                                                                   0, 12)));
+				javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION,
+				javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("SansSerif", 0, 12)));
 
 		fileButton.setText("Select");
 		fileButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent evt) {
-					fileButtonActionPerformed(evt);
-				}
-			});
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				fileButtonActionPerformed(evt);
+			}
+		});
 
 		org.jdesktop.layout.GroupLayout filePanelLayout = new org.jdesktop.layout.GroupLayout(filePanel);
 		filePanel.setLayout(filePanelLayout);
 		filePanelLayout.setHorizontalGroup(filePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-		                                                  .add(org.jdesktop.layout.GroupLayout.TRAILING,
-		                                                       filePanelLayout.createSequentialGroup()
-		                                                                      .addContainerGap()
-		                                                                      .add(fileTextField,
-		                                                                           org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                                           438,
-		                                                                           Short.MAX_VALUE)
-		                                                                      .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-		                                                                      .add(fileButton)
-		                                                                      .addContainerGap()));
+				.add(org.jdesktop.layout.GroupLayout.TRAILING,
+						filePanelLayout.createSequentialGroup().addContainerGap()
+								.add(fileTextField, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 438, Short.MAX_VALUE)
+								.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED).add(fileButton)
+								.addContainerGap()));
 		filePanelLayout.setVerticalGroup(filePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-		                                                .add(filePanelLayout.createSequentialGroup()
-		                                                                    .add(filePanelLayout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-		                                                                                        .add(fileButton)
-		                                                                                        .add(fileTextField,
-		                                                                                             org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-		                                                                                             org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                                                             org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-		                                                                    .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                                                     Short.MAX_VALUE)));
+				.add(filePanelLayout
+						.createSequentialGroup()
+						.add(filePanelLayout
+								.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+								.add(fileButton)
+								.add(fileTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+										org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+										org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+						.addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)));
 
 		cancelButton.setText("Cancel");
 		cancelButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent evt) {
-					cancelButtonActionPerformed(evt);
-				}
-			});
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				cancelButtonActionPerformed(evt);
+			}
+		});
 
 		runButton.setText("Execute");
 		runButton.addActionListener(new java.awt.event.ActionListener() {
-				public void actionPerformed(java.awt.event.ActionEvent evt) {
-					runButtonActionPerformed(evt);
-				}
-			});
+			public void actionPerformed(java.awt.event.ActionEvent evt) {
+				runButtonActionPerformed(evt);
+			}
+		});
 
 		org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
 		getContentPane().setLayout(layout);
-		layout.setHorizontalGroup(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-		                                .add(layout.createSequentialGroup().addContainerGap()
-		                                           .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-		                                                      .add(filePanel,
-		                                                           org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                           org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                           Short.MAX_VALUE).add(titleLabel)
-		                                                      .add(org.jdesktop.layout.GroupLayout.TRAILING,
-		                                                           layout.createSequentialGroup()
-		                                                                 .add(runButton)
-		                                                                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-		                                                                 .add(cancelButton)))
-		                                           .addContainerGap()));
-		layout.setVerticalGroup(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-		                              .add(layout.createSequentialGroup().addContainerGap()
-		                                         .add(titleLabel)
-		                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-		                                         .add(filePanel,
-		                                              org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
-		                                              org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                              org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-		                                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED,
-		                                                          org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
-		                                                          Short.MAX_VALUE)
-		                                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-		                                                    .add(cancelButton).add(runButton))
-		                                         .addContainerGap()));
+		layout.setHorizontalGroup(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING).add(
+				layout.createSequentialGroup()
+						.addContainerGap()
+						.add(layout
+								.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+								.add(filePanel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+										org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+								.add(titleLabel)
+								.add(org.jdesktop.layout.GroupLayout.TRAILING,
+										layout.createSequentialGroup().add(runButton)
+												.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+												.add(cancelButton))).addContainerGap()));
+		layout.setVerticalGroup(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING).add(
+				layout.createSequentialGroup()
+						.addContainerGap()
+						.add(titleLabel)
+						.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+						.add(filePanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE,
+								org.jdesktop.layout.GroupLayout.DEFAULT_SIZE,
+								org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED,
+								org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+						.add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE).add(cancelButton)
+								.add(runButton)).addContainerGap()));
 
 		pack();
 	} // </editor-fold>
@@ -232,7 +225,7 @@ public class SelectScriptDialog extends JDialog {
 
 	private void runScript() {
 		// Create Task
-		Task task = new URLdownloadTask();
+		final Task task = new ExecuteScriptTask();
 
 		// Configure JTask Dialog Pop-Up Box
 		JTaskConfig jTaskConfig = new JTaskConfig();
@@ -240,25 +233,25 @@ public class SelectScriptDialog extends JDialog {
 		jTaskConfig.displayCloseButton(true);
 		jTaskConfig.displayStatus(true);
 		jTaskConfig.setAutoDispose(false);
-		jTaskConfig.displayCancelButton(false);
+		jTaskConfig.displayCancelButton(true);
 
 		// Execute Task in New Thread; pop open JTask Dialog Box.
 		TaskManager.executeTask(task, jTaskConfig);
 	}
 
-	private class URLdownloadTask implements Task {
+	private final class ExecuteScriptTask implements Task {
+		
 		private TaskMonitor taskMonitor;
-
-		public URLdownloadTask() {
-		}
 
 		public void run() {
 			taskMonitor.setStatus("Running Script: \n\n" + scriptName + "\n\n");
 			taskMonitor.setPercentCompleted(-1);
 
+			Object returnVal = null;
+			
 			if (scriptName != null) {
 				try {
-					ScriptEngineManagerPlugin.getManager().execute(currentEngineID, scriptName, arguments);
+					returnVal = ScriptEngineManagerPlugin.getManager().execute(currentEngineID, scriptName, arguments);
 				} catch (Exception e1) {
 					e1.printStackTrace();
 					taskMonitor.setException(e1, "Could not finish script.");
@@ -266,11 +259,21 @@ public class SelectScriptDialog extends JDialog {
 			}
 
 			taskMonitor.setPercentCompleted(100);
-			taskMonitor.setStatus("Finished!");
+			
+			final String message;
+			if(returnVal != null)
+				message = "Script finished successfully.\n\nReturn Value From Script: " + returnVal.toString();
+			else
+				message = "Script finished successfully.\n\nScript returns null.";
+			
+			taskMonitor.setStatus(message);
 		}
 
+		@Override
 		public void halt() {
-			// TODO Implement this!!
+			// TODO: fix this
+			Thread.currentThread().interrupt();
+			taskMonitor.setException(new RuntimeException("Task Cancelled by user."), "Task cancelled");
 		}
 
 		public void setTaskMonitor(TaskMonitor monitor) throws IllegalThreadStateException {
@@ -278,7 +281,7 @@ public class SelectScriptDialog extends JDialog {
 		}
 
 		public String getTitle() {
-			return "Running Script: " + scriptName;
+			return "Running Script File: " + scriptName;
 		}
 	}
 }

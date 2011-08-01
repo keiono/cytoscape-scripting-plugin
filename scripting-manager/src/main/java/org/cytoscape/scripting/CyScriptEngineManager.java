@@ -35,8 +35,6 @@
 package org.cytoscape.scripting;
 
 import java.awt.event.ActionEvent;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.FileReader;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -61,7 +59,7 @@ import cytoscape.util.CytoscapeMenuBar;
  * Wrapper class for Java scripting framework.
  * 
  */
-public final class CyScriptEngineManager implements PropertyChangeListener {
+public final class CyScriptEngineManager {
 	
 	private static final CyLogger logger = CyLogger.getLogger(CyScriptEngineManager.class);
 	
@@ -90,13 +88,14 @@ public final class CyScriptEngineManager implements PropertyChangeListener {
 		
 		final CytoscapeMenuBar menuBar = Cytoscape.getDesktop().getCyMenus().getMenuBar();
 		
-		menu = new JMenu("Execute Scripts");
+		menu = new JMenu("Execute Script File");
 		menu.setIcon(SCRIPT_ICON);
 		menuBar.getMenu(PLUGIN_MENU).add(menu);
 
-		consoleMenu = new JMenu("Scripting Language Consoles");
+		consoleMenu = new JMenu("Scripting Language Consoles (Not available for this version)");
 		consoleMenu.setIcon(CONSOLE_ICON);
 		menuBar.getMenu(PLUGIN_MENU).add(consoleMenu);
+		consoleMenu.setEnabled(false);
 	}
 
 
@@ -183,10 +182,5 @@ public final class CyScriptEngineManager implements PropertyChangeListener {
 			logger.info("Return Val = [" + returnVal + "]");
 		
 		return returnVal;
-	}
-
-	
-	public void propertyChange(PropertyChangeEvent pce) {
-		// TODO Auto-generated method stub
 	}
 }
