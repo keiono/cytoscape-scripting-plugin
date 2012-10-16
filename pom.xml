@@ -29,6 +29,11 @@
 		<module>scripting-clojure</module>
 	</modules>
 
+  <scm>
+    <connection>scm:git:git@github.com:keiono/cytoscape-scripting-plugin.git</connection>
+    <developerConnection>scm:git:git@github.com:keiono/cytoscape-scripting-plugin.git</developerConnection>
+  </scm>
+
 	<build>
 		<plugins>
 			<plugin>
