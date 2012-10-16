@@ -8,9 +8,8 @@
 		<groupId>org.cytoscape</groupId>
 		<version>1.0-SNAPSHOT</version>
 	</parent>
-	<groupId>org.cytoscape</groupId>
+
 	<artifactId>scripting-jruby</artifactId>
-	<version>1.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	
 	<name>scripting-jruby</name>
