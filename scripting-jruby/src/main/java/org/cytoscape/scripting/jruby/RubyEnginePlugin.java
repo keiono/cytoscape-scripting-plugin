@@ -47,7 +47,7 @@ import cytoscape.plugin.CytoscapePlugin;
 public class RubyEnginePlugin extends CytoscapePlugin {
 
 	private static final String ENGINE_NAME = "jruby";
-	private static final String ENGINE_DISPLAY_NAME = "Ruby Scripting Engine (JRuby v1.6.3)";
+	private static final String ENGINE_DISPLAY_NAME = "Ruby Scripting Engine (JRuby v1.7.0 RC2)";
 
 	/**
 	 * Creates a new RubyEnginePlugin object.

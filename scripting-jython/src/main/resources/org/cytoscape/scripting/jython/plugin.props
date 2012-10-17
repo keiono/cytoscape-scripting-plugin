@@ -5,15 +5,16 @@ pluginName=PythonScriptingEngine
 
 # Description used to give users information about the plugin such as what it does.  
 # Html tags are encouraged for formatting purposes.
-pluginDescription=<p>Scripting engine based on Jython 2.5.2 implementation.
+pluginDescription=<p>Scripting engine based on Jython 2.5.3 implementation.</p>
+
 # Plugin version number, this must be two numbers separated by a decimlal.  Ex. 0.2, 14.03
-pluginVersion=1.0
+pluginVersion=2.53
 
 # Compatible Cytoscape version
 cytoscapeVersion=2.8
 
 # Category, use one of the categories listed on the website or create your own
-pluginCategory=Communication/Scripting
+pluginCategory=scripting
 
 
 # List of authors.  Note each author and institution pair are separated by a : (colon)

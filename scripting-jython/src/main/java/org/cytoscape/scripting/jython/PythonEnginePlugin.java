@@ -49,8 +49,7 @@ import cytoscape.plugin.CytoscapePlugin;
 public class PythonEnginePlugin extends CytoscapePlugin implements CyScriptingEngine {
 
 	private static final String ENGINE_NAME = "python";
-	private static final String ENGINE_DISPLAY_NAME = "Python Scripting Engine (based on Jython v2.5.2)";
-	private static final Icon ICON = new ImageIcon(PythonEnginePlugin.class.getResource("images/python.png"));
+	private static final String ENGINE_DISPLAY_NAME = "Python Scripting Engine (based on Jython v2.5.3)";
 
 	private final String id;
 	private final String displayName;
@@ -59,8 +58,7 @@ public class PythonEnginePlugin extends CytoscapePlugin implements CyScriptingEn
 	public PythonEnginePlugin() {
 		this.id = ENGINE_NAME;
 		this.displayName = ENGINE_DISPLAY_NAME;
-		this.icon = ICON;
-
+    this.icon = new ImageIcon(this.getClass().getClassLoader().getResource("images/python.png"));
 		Cytoscape.getPropertyChangeSupport().addPropertyChangeListener(this);
 	}
 
